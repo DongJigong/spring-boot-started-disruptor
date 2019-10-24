@@ -2,7 +2,6 @@ package com.changqin.fast.event.disruptor;
 
 import com.changqin.fast.domain.message.DomainEventHandler;
 import com.lmax.disruptor.EventHandler;
-import javafx.event.Event;
 
 @SuppressWarnings({"rawtypes"})
 public class DomainEventHandlerAdapter implements EventHandler<EventDisruptor> {

@@ -10,12 +10,6 @@ import com.changqin.fast.disruptor.Sender;
 import com.changqin.fast.domain.message.DomainMessage;
 import com.changqin.fast.event.EventFirer;
 
-/**
- * @Author: Binwei.Chen
- * @Date: 13-12-04
- * @Time: 下午2:30
- * @Description: to write something
- */
 public class EventInterceptor implements MethodInterceptor {
 	private final Logger	logger	= LoggerFactory.getLogger(EventInterceptor.class);
 	protected EventFirer	eventFirer;

@@ -14,15 +14,12 @@ public class EventResultDisruptor implements EventResult {
 	protected boolean				over;
 	protected Object				result;
 	protected ValueEventProcessor	valueEventProcessor;
-	private long 					timeout;
 
 	public EventResultDisruptor(String topic, DomainMessage domainMessage,long timeout) {
 		super();
 		this.topic = topic;
 		this.domainMessage = domainMessage;
-//		BlockingWaitStrategy waitStrategy = new BlockingWaitStrategy();
-//		SingleProducerSequencer sequencer = new SingleProducerSequencer(2,
-//				waitStrategy);
+
 		RingBuffer ringBuffer = RingBuffer.createSingleProducer(ValueEvent.EVENT_FACTORY, 2,new TimeoutBlockingWaitStrategy(timeout,TimeUnit.SECONDS));
 		this.valueEventProcessor = new ValueEventProcessor(ringBuffer);
 	}

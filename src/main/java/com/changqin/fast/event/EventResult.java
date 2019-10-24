@@ -1,11 +1,5 @@
 package com.changqin.fast.event;
 
-/**
- * @Author: Binwei.Chen
- * @Date: 13-12-04
- * @Time: 下午2:30
- * @Description: to write something
- */
 public interface EventResult {
 
 	/**
