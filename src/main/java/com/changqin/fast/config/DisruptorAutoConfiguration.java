@@ -15,8 +15,11 @@ public class DisruptorAutoConfiguration {
 	@Value("${disruptor.ringBuffer}")
 	private String ringBuffer;
 
-	@Value("${disruptor.ringBuffer.event.timeout}")
-	private long timeout;
+	@Value("${disruptor.ringBuffer.event.result.timeout}")
+	private long resultTimeout;
+
+	@Value("${disruptor.ringBuffer.event.source.timeout}")
+	private long sourceTimeout;
 
 	@Bean
 	public DisruptorParams disruptorParams(){
@@ -25,7 +28,7 @@ public class DisruptorAutoConfiguration {
 
 	@Bean
 	public DisruptorFactory defaultDisruptorFactory(ContainerWrapper containerWrapper) {
-		return new DisruptorFactory(disruptorParams(),containerWrapper);
+		return new DisruptorFactory(disruptorParams(),containerWrapper,sourceTimeout);
 	}
 
 	@Bean
@@ -35,7 +38,7 @@ public class DisruptorAutoConfiguration {
 	
 	@Bean
 	public EventFirer eventFirer(DisruptorFactory disruptorFactory) {
-		return new EventFirer(disruptorFactory,timeout);
+		return new EventFirer(disruptorFactory,resultTimeout);
 	}
 
 }

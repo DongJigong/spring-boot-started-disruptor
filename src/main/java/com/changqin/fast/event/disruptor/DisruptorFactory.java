@@ -6,6 +6,7 @@ import com.changqin.fast.domain.message.DomainEventDispatchHandler;
 import com.changqin.fast.domain.message.DomainEventHandler;
 import com.lmax.disruptor.BlockingWaitStrategy;
 import com.lmax.disruptor.EventFactory;
+import com.lmax.disruptor.TimeoutBlockingWaitStrategy;
 import com.lmax.disruptor.WaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.EventHandlerGroup;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 public class DisruptorFactory implements EventFactory {
 
@@ -28,10 +30,13 @@ public class DisruptorFactory implements EventFactory {
 
 	private final ContainerWrapper								containerWrapper;
 
-	public DisruptorFactory(DisruptorParams disruptorParams, ContainerWrapper containerWrapper) {
+	private long timeout;
+
+	public DisruptorFactory(DisruptorParams disruptorParams, ContainerWrapper containerWrapper,long timeout) {
 		this.RingBufferSize = disruptorParams.getRingBufferSize();
 		this.containerWrapper = containerWrapper;
 		this.handlesMap = new ConcurrentHashMap<String, TreeSet<DomainEventHandler>>();
+		this.timeout = timeout;
 
 	}
 
@@ -42,7 +47,7 @@ public class DisruptorFactory implements EventFactory {
 	}
 
 	private Disruptor createDw(final String topic) {
-		WaitStrategy waitStrategy = new BlockingWaitStrategy();
+		WaitStrategy waitStrategy = new TimeoutBlockingWaitStrategy(timeout, TimeUnit.SECONDS);
 //		ClaimStrategy claimStrategy = new MultiThreadedClaimStrategy(Integer.parseInt(RingBufferSize));
 		Disruptor disruptor = new Disruptor(this,Integer.parseInt(RingBufferSize), new ThreadFactory() {
 			@Override
