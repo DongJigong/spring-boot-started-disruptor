@@ -21,10 +21,14 @@ public class EventFirer {
 	private DisruptorFactory				disruptorFactory;
 	protected final Map<String, Disruptor>	topicDisruptors;
 
-	public EventFirer(DisruptorFactory disruptorFactory) {
+	// seconds
+	private long timeout;
+
+	public EventFirer(DisruptorFactory disruptorFactory,long timeout) {
 		super();
 		this.disruptorFactory = disruptorFactory;
 		this.topicDisruptors = new ConcurrentHashMap<String, Disruptor>();
+		this.timeout = timeout;
 	}
 
 	
@@ -42,7 +46,7 @@ public class EventFirer {
 			}
 			
 			if (topic != null && (topic.startsWith("get") || topic.startsWith("check"))) {
-				domainMessage.setResultEvent(new EventResultDisruptor(topic, domainMessage,10000));
+				domainMessage.setResultEvent(new EventResultDisruptor(topic, domainMessage,timeout));
 			}
 
 			RingBuffer ringBuffer = disruptor.getRingBuffer();
